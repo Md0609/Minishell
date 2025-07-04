@@ -1,0 +1,126 @@
+
+#include "minishell.h"
+
+void	token_env_even_dollars_quo(t_input *in, size_t w, size_t *i, size_t *k)
+{
+	size_t	j;
+
+	if (!(in->dollars % 2))
+	{
+		j = 0;
+		while (in->envp[in->env_n][j] != '=')
+			j++;
+		j++;
+		while (in->envp[in->env_n][j])
+		{
+			dynamic_input(in, *k);
+			in->token[(*k)++] = in->envp[in->env_n][j++];
+		}
+	}
+	else
+	{
+		while (in->input_split[w][*i] && in->input_split[w][(*i) + 1] != ' ')
+		{
+			(*i)++;
+			dynamic_input(in, *k);
+			in->token[(*k)++] = in->input_split[w][(*i)];
+		}
+	}
+}
+
+void	token_env_if_even_dollars(t_input *in, size_t w, size_t *i, size_t *k)
+{
+	size_t	j;
+
+	if (!(in->dollars % 2))
+	{
+		j = 0;
+		while (in->envp[in->env_n][j] != '=')
+			j++;
+		j++;
+		while (in->envp[in->env_n][j] == ' ')
+			j++;
+		while (in->envp[in->env_n][j])
+		{
+			dynamic_input(in, *k);
+			in->token[(*k)++] = in->envp[in->env_n][j++];
+		}
+		in->from_expand = 1;
+	}
+	else
+		token_env_if_even_dollars2(in, w, i, k);
+}
+
+void	token_valid_env_variable(t_input *n, size_t w, size_t *i, size_t *k)
+{
+	n->env_n = valid_env((n->input_split[w] + (*i) + 1), n, w);
+	if (n->env_n > -1 && is_quoted(n, w) == 0)
+		token_env_if_even_dollars(n, w, i, k);
+	else if (n->env_n > -1 && is_quoted(n, w) == 2)
+		token_env_even_dollars_quo(n, w, i, k);
+	if (n->input_split[w][*i])
+	{
+		if (n->dollars % 2 == 0 && is_quoted(n, w) != 1 && n->env_n == -1
+			&& (!n->input_split[w][n->idollar]
+			|| n->input_split[w][n->idollar] == ' '))
+		{
+			dynamic_input(n, *k);
+			n->token[(*k)++] = '$';
+		}
+		(*i)++;
+	}
+}
+
+void	token_rest_no_env(t_input *in, size_t w, size_t *i, size_t *k)
+{
+	size_t	j;
+	int		is_digit;
+	char	*str;
+
+	j = (*i);
+	str = in->input_split[w];
+	is_digit = ft_isdigit(str[in->idollar]);
+	if (str[(*i)] && str[(*i) + 1] == ' ')
+	{
+		while (str[j] != '$')
+		{
+			if (is_digit || ft_strrchr(N_ODDCHAR, str[j])
+				|| ft_strrchr(D_Y_ODDCHAR, str[j]))
+				break ;
+			j--;
+		}
+		if (str[j] != '$')
+		{
+			dynamic_input(in, *k);
+			in->token[(*k)++] = in->input_split[w][(*i)];
+		}
+	}
+}
+
+void	token_rare_cases(t_input *in, size_t w, size_t *i, size_t *k)
+{
+	char	*str;
+	size_t	id;
+
+	id = in->idollar;
+	str = in->input_split[w];
+	if (in->dollars % 2)
+	{
+		dynamic_input(in, *k);
+		in->token[(*k)++] = str[id];
+		(*i) = id;
+		return ;
+	}
+	dynamic_input(in, *k);
+	if (!str[id] && in->input_split[w][*i])
+		in->token[(*k)++] = '$';
+	else if ((ft_isdigit(str[id]) || ft_strrchr(N_ODDCHAR, str[id])
+			|| ft_strrchr(D_Y_ODDCHAR, str[id])) && str[id])
+	{
+		if (str[id] && !str[id + 1] && !ft_strrchr(D_Y_ODDCHAR, str[id]))
+			in->spaced = 0;
+		if (ft_strrchr(D_Y_ODDCHAR, str[id]))
+			token_rare_cases2(in, k, str, id);
+		(*i) = id;
+	}
+}

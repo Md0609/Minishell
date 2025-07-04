@@ -1,0 +1,75 @@
+
+#include "minishell.h"
+
+/* void	clean_nulls(char ***split, t_split *squotes, int **status)
+{
+	size_t	i;
+	size_t	j;
+	char	**aux;
+	int		*numbers;
+
+	i = 0;
+	j = 0;
+	aux = *split;
+	numbers = *status;
+	while (i < squotes->words)
+	{
+		if (aux[i] && aux[i][0] != '\0')
+		{
+			(*status)[j] = numbers[i];
+			(*split)[j++] = aux[i];
+		}
+		else
+			free (aux[i]);
+		i++;
+	}
+	(*split)[j] = NULL;
+	squotes->words = j;
+} */
+
+void	init_struct(t_split *squotes, char const *s, char c, size_t *i)
+{
+	*i = 0;
+	squotes->start = 0;
+	squotes->s = (char *)s;
+	squotes->error = 0;
+	squotes->quotes = 0;
+	squotes->words = 0;
+	squotes->c = c;
+}
+
+char	**ft_split_quotes2(char const *s, char c, t_input *input)
+{
+	size_t	i;
+	char	**split;
+	t_split	squotes;
+
+	init_struct(&squotes, s, c, &i);
+	squotes.words = ft_count_quotes_words(&squotes, input);
+	if (squotes.error)
+		return (free(input->status), NULL);
+	split = (char **)ft_calloc(squotes.words + 1, sizeof(char *));
+	if (!split)
+		return (free(input->status), NULL);
+	while (i < squotes.words)
+	{
+		split[i] = sub_split_quotes(&squotes, input);
+		input->status[i] = input->spaced;
+		if (!split[i])
+		{
+			while (i > 0)
+				free(split[--i]);
+			return (free(split), free(input->status), NULL);
+		}
+		i++;
+	}
+	return (split);
+}
+
+char	**ft_split_quotes(char const *s, char c, t_input *input)
+{
+	if (!s)
+		return (NULL);
+	else
+		return (ft_split_quotes2(s, c, input));
+}
