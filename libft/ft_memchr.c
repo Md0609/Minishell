@@ -3,31 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 18:43:12 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/20 09:09:15 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:32:48 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:32:49 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*search for first byte with char c in first n bytes of s*/
-/*if not found -> NULL*/
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	unsigned char	*s_aux;
-	unsigned char	c_aux;
-	size_t			i;
+	size_t				i;
+	unsigned char		ch;
+	const unsigned char	*str;
 
-	s_aux = (unsigned char *)s;
-	c_aux = (char)c;
+	ch = c;
+	str = (const unsigned char *)s;
 	i = 0;
 	while (i < n)
 	{
-		if (s_aux[i] == c_aux)
-			return (&s_aux[i]);
+		if (str[i] == ch)
+			return ((void *)s + i);
 		i++;
 	}
-	return (NULL);
+	return (0);
 }

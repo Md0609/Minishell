@@ -3,36 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 10:17:39 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:56:02 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:31:12 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:31:14 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-/*Finds char c inside of string s*/
-/*if found -> returns pointer to first found in s*/
-/*not found -> NULL*/
-/*c = '\0' returns the first terminator*/
-/*needs to cast (char) because overflow conversion c = 1024 = \0
-	c = 'e'+256 = 'e'*/
-/*(char *) because it is a non const return from const char* */
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *str, int c)
 {
-	size_t	i;
+	int				i;
+	unsigned char	ch;
 
 	i = 0;
-	while (s[i])
+	ch = c;
+	if (ch == '\0')
 	{
-		if (s[i] == (char)c)
-			return ((char *)&s[i]);
+		i = ft_strlen(str);
+		return ((char *)str + i++);
+	}
+	while (str[i])
+	{
+		if (str[i] == ch)
+			return ((char *)str + i);
 		i++;
 	}
-	if ((char)c == '\0')
-		return ((char *)&s[i]);
-	else
-		return (NULL);
+	return (NULL);
 }

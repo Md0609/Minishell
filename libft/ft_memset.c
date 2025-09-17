@@ -3,27 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 09:15:04 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:55:46 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:32:18 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:32:19 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*fills 1st n bytes of memory pointed by s with constant byte c*/
-void	*ft_memset(void *s, int c, size_t n)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t			index;
-	unsigned char	*ptr;
+	unsigned char	*p;
+	unsigned char	ch;
 
-	index = 0;
-	ptr = (unsigned char *)s;
-	while (index < n)
+	p = (unsigned char *)b;
+	ch = c;
+	while (len--)
 	{
-		ptr[index] = (unsigned char)c;
-		index++;
+		*p = ch;
+		p++;
 	}
-	return (s);
+	return (b);
 }

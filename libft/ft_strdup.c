@@ -3,28 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 16:57:12 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:56:11 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:30:52 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:30:58 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*copies a string to another area of memory (need malloc)*/
-/*copy of NULL would be unknown. Returns NULL*/
-char	*ft_strdup(const char *s)
+char	*ft_strdup(const char *s1)
 {
-	size_t			length;
-	char			*dest;
+	char	*s2;
+	size_t	len;
 
-	if (!s)
+	len = ft_strlen(s1) + 1;
+	s2 = malloc(len * sizeof(char));
+	if (!s2)
 		return (NULL);
-	length = ft_strlen(s);
-	dest = (char *)ft_calloc(length + 1, sizeof(char));
-	if (!dest)
-		return (NULL);
-	ft_strlcpy(dest, s, length + 1);
-	return (dest);
+	ft_strlcpy(s2, s1, len);
+	return (s2);
 }

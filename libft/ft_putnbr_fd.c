@@ -3,49 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 20:11:39 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/24 18:58:21 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:31:42 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:31:44 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-
-static int	ft_give_divisor(int nb)
-{
-	int	i;
-
-	i = 1000000000;
-	if (nb == 0)
-	{
-		return (1);
-	}
-	while ((nb / i) == 0)
-		i = i / 10;
-	return (i);
-}
+#include "libft.h"
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	int			division;
-	int			ext_num;
-	long int	aux;
+	long	nbr;
 
-	aux = n;
-	division = ft_give_divisor(n);
-	if (aux < 0)
+	nbr = n;
+	if (nbr < 0)
 	{
-		aux = -1 * aux;
-		write(fd, "-", 1);
+		ft_putchar_fd('-', fd);
+		nbr = -nbr;
 	}
-	while ((aux % division != 0) || (division > 1))
+	if (nbr >= 10)
 	{
-		ext_num = (aux / division) + '0';
-		write(fd, &ext_num, 1);
-		aux = aux % division;
-		division = division / 10;
+		ft_putnbr_fd(nbr / 10, fd);
+		ft_putchar_fd((nbr % 10) + '0', fd);
 	}
-	ext_num = aux + '0';
-	write(fd, &ext_num, 1);
+	else
+		ft_putchar_fd(nbr + '0', fd);
 }

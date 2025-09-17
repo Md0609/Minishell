@@ -3,89 +3,124 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/19 09:46:58 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/24 18:45:42 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:31:23 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:31:25 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_count_words(char *s, char c)
+static int	ft_count_words(const char *s, char c)
 {
-	size_t	i;
-	size_t	words;
+	int	words;
+	int	i;
 
-	if (!s)
-		return (0);
-	i = 0;
 	words = 0;
-	if (!s)
-		return (0);
+	i = 0;
 	while (s[i])
 	{
-		if (s[i] != c)
-		{
+		if (i == 0 && s[i] != c)
 			words++;
-			while ((s[i] != c) && (s[i]))
-				i++;
-		}
-		if (s[i])
-			i++;
+		if (i > 0 && s[i] != c && s[i - 1] == c)
+			words++;
+		i++;
 	}
 	return (words);
 }
-/*1.run all s through c chars to remove them with (*start)++*/
-/*2.count each letter until I find a c char with i*/
-/*3.ft_calloc of i + 1 elements of each string*/
-/*4.return to start and form the string from start to i*/
-/*(*start) will be updated to new position to be send back to split*/
 
-static char	*sub_split(char const *s, char c, size_t *start)
+static char	**ft_malloc_strs(char **strs, const char *s, char c)
 {
-	size_t	i;
-	size_t	j;
-	char	*split_aux;
+	int	count;
+	int	i;
+	int	x;
+
+	count = 0;
+	i = 0;
+	x = 0;
+	while (s[i])
+	{
+		if (s[i] != c)
+			count++;
+		if ((s[i] == c && i > 0 && s[i - 1] != c)
+			|| (s[i] != c && s[i + 1] == '\0'))
+		{
+			strs[x] = malloc(sizeof(char) * (count + 1));
+			if (!strs[x])
+				return (NULL);
+			count = 0;
+			x++;
+		}
+		i++;
+	}
+	return (strs);
+}
+
+static char	**ft_cpy_strs(char **strs, const char *s, char c)
+{
+	int	i;
+	int	x;
+	int	y;
 
 	i = 0;
-	j = 0;
-	while ((s[*start] == c) && (s[*start]))
-		(*start)++;
-	while (s[i + *start] && s[i + *start] != c)
+	x = 0;
+	y = 0;
+	while (s[i])
+	{
+		if (s[i] != c)
+			strs[x][y++] = s[i];
+		if (s[i] != c && s[i + 1] == '\0')
+			strs[x][y] = '\0';
+		if (s[i] == c && i > 0 && s[i - 1] != c)
+		{
+			strs[x][y] = '\0';
+			x++;
+			y = 0;
+		}
 		i++;
-	split_aux = (char *)ft_calloc(i + 1, sizeof(char));
-	if (!split_aux)
-		return (NULL);
-	while (j < i)
-		split_aux[j++] = s[(*start)++];
-	return (split_aux);
+	}
+	return (strs);
+}
+
+static char	**ft_merror(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		strs[i] = NULL;
+		i++;
+	}
+	free(strs);
+	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	size_t	words;
-	size_t	i;
-	size_t	start;
-	char	**split;
+	char	**strs;
+	int		wordcount;
 
-	i = 0;
-	start = 0;
-	words = ft_count_words((char *)s, c);
-	split = (char **)ft_calloc(words + 1, sizeof(char *));
-	if (!split)
-		return (NULL);
-	while (i < words)
+	if (!s)
 	{
-		split[i] = sub_split(s, c, &start);
-		if (!split[i])
-		{
-			while (i > 0)
-				free(split[--i]);
-			free(split);
+		strs = malloc(sizeof(char) * 1);
+		if (!strs)
 			return (NULL);
-		}
-		i++;
+		*strs = NULL;
+		return (strs);
 	}
-	return (split);
+	wordcount = ft_count_words(s, c);
+	strs = malloc(sizeof(*strs) * (wordcount + 1));
+	if (!strs)
+		return (NULL);
+	if (ft_malloc_strs(strs, s, c))
+	{
+		ft_cpy_strs(strs, s, c);
+		strs[wordcount] = NULL;
+	}
+	else
+		strs = ft_merror(strs);
+	return (strs);
 }

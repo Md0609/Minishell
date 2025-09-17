@@ -3,73 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/19 16:07:48 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/24 18:40:41 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:34:15 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:34:16 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*returns in string format the int number given*/
-/*NULL if not MALLOC*/
-
-static int	ft_num_digits(long num, int *div)
+static size_t	ft_itoa_len(long num)
 {
-	int	digits;
+	size_t	len;
 
+	len = 0;
 	if (num == 0)
 		return (1);
-	digits = 10;
-	while (num / *div == 0)
+	if (num < 0)
 	{
-		digits--;
-		*div /= 10;
+		len++;
+		num = -num;
 	}
-	return (digits);
+	while (num >= 1)
+	{
+		len++;
+		num /= 10;
+	}
+	return (len);
 }
 
-static char	*compose_number(char *s, long number, int div, size_t digits)
+static char	*ft_num_to_str(long num, char *str, size_t len)
 {
-	size_t	i;
-
-	i = 0;
-	while (i < digits)
+	str = ft_calloc(len + 1, sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	if (num < 0)
 	{
-		s[i] = (number / div) + '0';
-		number %= div;
-		div /= 10;
-		i++;
+		str[0] = '-';
+		num = -num;
 	}
-	return (s);
+	len--;
+	while (len)
+	{
+		str[len] = (num % 10) + '0';
+		num /= 10;
+		len--;
+	}
+	if (str[0] != '-')
+		str[0] = (num % 10) + '0';
+	return (str);
 }
-
-/* divisor is max possible for MAX_INT will be reducing in ft_numb_digits*/
-/*if negative = 1 add one byte to calloc and start index 1 in char *number*/
 
 char	*ft_itoa(int n)
 {
-	long	aux;
-	size_t	negative;
-	int		divisor;
-	char	*number;
-	size_t	num_digits;
+	long	num;
+	size_t	len;
+	char	*str;
 
-	aux = n;
-	divisor = 1000000000;
-	negative = 0;
-	if (n < 0)
-	{
-		aux = -aux;
-		negative = 1;
-	}
-	num_digits = ft_num_digits(aux, &divisor);
-	number = (char *)ft_calloc(num_digits + negative + 1, sizeof(char));
-	if (!number)
+	num = n;
+	len = ft_itoa_len(num);
+	str = 0;
+	str = ft_num_to_str(num, str, len);
+	if (!str)
 		return (NULL);
-	if (negative)
-		number[0] = '-';
-	compose_number(&number[negative], aux, divisor, num_digits);
-	return (number);
+	return (str);
 }

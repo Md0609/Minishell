@@ -1,120 +1,120 @@
-NAME = minishell
+# Program file name
+NAME	= minishell
 
-CC = cc
-INC_DIR = -I./include -I./libft -I./ft_printf
-CFLAGS = -Wall -Wextra -Werror $(INC_DIR) #-g3 -fsanitize=address 
-LDFLAGS = -lreadline -fsanitize=address
-AR = ar rcs
-RM = rm -rf
+# Compiler and compilation flags
+CC		= cc
+CFLAGS	= -Werror -Wextra -Wall
 
-GREEN := \033[1;32m
-RED := \033[1;31m
-RESET := \033[0m
+# Build files and directories
+SRC_PATH = ./src/
+OBJ_PATH = ./obj/
+INC_PATH = ./includes/
+SRC		= 	main.c \
+			utils_dg/init_data.c \
+			env_dg/env.c \
+			env_dg/env_set.c \
+			lexer_d/parse_user_input.c \
+			lexer_d/tokenization.c \
+			lexer_d/tokenization_utils.c \
+			lexer_d/check_if_var.c \
+			lexer_d/lexer_grammar.c \
+			lexer_d/token_lst_utils.c \
+			lexer_d/token_lst_utils_2.c \
+			expansion_d/var_expander.c \
+			expansion_d/var_expander_utils.c \
+			expansion_d/identify_var.c \
+			expansion_d/quotes_handler.c \
+			expansion_d/quotes_remover.c \
+			expansion_d/recover_value.c \
+			expansion_d/replace_var.c \
+			parser_d/create_commands.c \
+			parser_d/parse_word.c \
+			parser_d/fill_args_echo.c \
+			parser_d/fill_args_echo_utils.c \
+			parser_d/fill_args_default.c \
+			parser_d/parse_input.c \
+			parser_d/parse_trunc.c \
+			parser_d/parse_append.c \
+			parser_d/parse_heredoc.c \
+			parser_d/parse_heredoc_utils.c \
+			parser_d/parse_pipe.c \
+			parser_d/cmd_lst_utils.c \
+			parser_d/cmd_lst_utils_cleanup.c \
+			builtins_d/export_builtin.c \
+			builtins_d/unset_builtin.c \
+			builtins_d/cd_builtin.c \
+			builtins_d/env_builtin.c \
+			builtins_d/pwd_builtin.c \
+			builtins_d/echo_builtin.c \
+			builtins_d/exit_builtin.c \
+			execution_g/execute.c \
+			execution_g/execute_cmd.c \
+			execution_g/execute_utils.c \
+			execution_g/parse_path.c \
+			redirections_g/pipe.c \
+			redirections_g/file_io.c \
+			utils_dg/exit.c \
+			utils_dg/error.c \
+			utils_dg/cleanup.c \
+			signals_g/signal.c \
 
-# Source files - Organized by functionality
-SRC = 	src/main.c \
-		src/utils/clean_all_m.c \
-		src/utils/prompt.c \
-		src/utils/get_next_line.c \
-		src/utils/get_next_line_utils.c \
-		src/utils/init_struct_m.c \
-		\
-		src/builtins/pwd/bi_pwd_m.c \
-		src/builtins/env/bi_env_m.c \
-		src/builtins/env/bi_env_dollar_j.c \
-		src/builtins/echo/bi_echo_short_j.c \
-		src/builtins/echo/bi_echo_short_2_j.c \
-		src/builtins/echo/bi_echo_m.c \
-		src/builtins/echo/bi_echo_dollar_j.c \
-		src/builtins/echo/bi_echo_dollar_2_j.c \
-		src/builtins/export/bi_export_m.c \
-		src/builtins/export/bi_export_utils_m.c \
-		src/builtins/cd/bi_cd_m.c \
-		src/builtins/unset/bi_unset_m.c \
-		src/builtins/exit/bi_exit_j.c \
-		\
-		src/parser/parsing_j.c \
-		src/parser/parsing2_j.c \
-		src/parser/manage_token_parsing_j.c \
-		src/parser/manage_token_dollars_j.c \
-		src/parser/manage_token_dollars2_j.c \
-		src/parser/manage_token_dollars3_j.c \
-		src/parser/manage_inputs_m.c \
-		src/parser/manage_inputs_utils_j.c \
-		src/parser/manage_input_dollars_j.c \
-		src/parser/manage_input_dollars2_j.c \
-		src/parser/manage_input_dollars3_j.c \
-		src/parser/split_exp_utils_j.c \
-		src/parser/update_inputs_m.c \
-		src/parser/realloc_input_j.c \
-		\
-		src/executor/execute_command_m.c \
-		src/executor/execute_command_path_m.c \
-		src/executor/redirections_m.c \
-		src/executor/redirections_solve_m.c \
-		src/executor/redirections_solve_j.c \
-		src/executor/manage_pipes_m.c \
-		src/executor/manage_pipes_utils_m.c \
-		src/executor/manage_pipes_utils2_m.c \
-		src/executor/update_env_m.c \
-		\
-		src/signals/signal_j.c \
-		src/signals/signal2_j.c \
-		\
-		src/history/history_m.c \
-		src/splitQuotes/quote_handling.c \
-		src/splitQuotes/quote_utils.c \
-		src/splitQuotes/token_processing.c \
-		src/splitQuotes/token_separation.c \
-		src/splitQuotes/word_counting.c
+SRCS	= $(addprefix $(SRC_PATH), $(SRC))
+OBJ		= $(SRC:.c=.o)
+OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
+INC		= -I $(INC_PATH) -I $(LIBFT_PATH)
 
-# Object files
-OBJ_DIR = obj
-OBJS = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
+# Libft files and directories
+LIBFT_PATH = ./libft/
+LIBFT = ./libft/libft.a
 
-# Create object directories
-OBJ_DIRS = $(sort $(dir $(OBJS)))
+# Colores para mensajes bonitos
+GREEN = \033[1;32m
+RED = \033[1;31m
+RESET = \033[0m
 
-# Libft directory
-LIBFT_DIR = ./libft
-LIBFT = $(LIBFT_DIR)/libft.a
+# Main rule
+all: $(OBJ_PATH) $(LIBFT) $(NAME)
 
-# Ft_printf is now inside libft
-FTPRINTF = $(LIBFT_DIR)/libftprintf.a
+# Objects directory rule
+$(OBJ_PATH):
+	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(OBJ_PATH)/builtins_d
+	@mkdir -p $(OBJ_PATH)/lexer_d
+	@mkdir -p $(OBJ_PATH)/expansion_d
+	@mkdir -p $(OBJ_PATH)/parser_d
+	@mkdir -p $(OBJ_PATH)/env_dg
+	@mkdir -p $(OBJ_PATH)/execution_g
+	@mkdir -p $(OBJ_PATH)/utils_dg
+	@mkdir -p $(OBJ_PATH)/redirections_g
+	@mkdir -p $(OBJ_PATH)/signals_g
+	@mkdir -p $(OBJ_PATH)/debug
 
-MAKEFLAGS = --no-print-directory
+# Objects rule
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
-all: $(NAME)
-
-$(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
-
-# FTPRINTF is now built with LIBFT
-
-$(OBJ_DIR)/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -o $@ -c $<
-
+# Project file rule
 $(NAME): $(OBJS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(LDFLAGS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -lreadline -o $(NAME)
 	@echo "[100%] $(GREEN)Compilation successful!$(RESET)"
 
+# Libft rule
+$(LIBFT):
+	@make -s -C $(LIBFT_PATH)
+
+# Clean up build files rule
 clean:
-	@$(MAKE) -C $(LIBFT_DIR) clean
-	@$(RM) $(OBJ_DIR)
+	@$(MAKE) -s clean -C $(LIBFT_PATH)
+	@$(RM) -rf $(OBJ_PATH)
 	@echo "[100%] $(RED)Cleaning object files...$(RESET)"
 
+# Remove program executable
 fclean: clean
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-	@$(RM) $(NAME)
+	@$(MAKE) -s fclean -C $(LIBFT_PATH)
+	@$(RM) -f $(NAME)
 	@echo "[100%] $(RED)Cleaning everything...$(RESET)"
 
+# Clean + remove executable
 re: fclean all
 
-norm:
-	@echo "Checking norminette for all source files..."
-	@norminette $(shell find ./src ./include -name "*.c" -o -name "*.h")
-
-.PHONY: all clean fclean re norm
-
-.SILENT:
+.PHONY: all re clean fclean

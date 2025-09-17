@@ -3,23 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 20:45:48 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/23 19:05:31 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:31:31 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:31:33 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
+#include "libft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	size_t	i;
+	int	len;
 
 	if (!s)
 		return ;
-	i = 0;
-	while (s[i])
-		write(fd, &s[i++], 1);
+	len = ft_strlen(s);
+	write (fd, s, len);
 }

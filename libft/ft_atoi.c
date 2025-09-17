@@ -3,35 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 12:05:07 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/18 12:40:25 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:36:48 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:36:49 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*converts from string to number int*/
-int	ft_atoi(const char *nptr)
+#include "libft.h"
+
+int	ft_atoi(const char *str)
 {
-	int	result;
-	int	minus;
+	int	num;
+	int	isneg;
 	int	i;
 
-	minus = 1;
+	num = 0;
+	isneg = 1;
 	i = 0;
-	result = 0;
-	while (nptr[i] != 0 && ((nptr[i] > 8 && nptr[i] < 14) || nptr[i] == 32))
+	while (str[i] && (str[i] == ' ' || str[i] == '\t'
+			|| str[i] == '\n' || str[i] == '\r'
+			|| str[i] == '\v' || str[i] == '\f'))
 		i++;
-	if (nptr[i] != '\0' && (nptr[i] == '-' || nptr[i] == '+'))
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
 	{
-		if (nptr[i] == '-')
-			minus = -1;
+		isneg *= -1;
 		i++;
 	}
-	while (nptr[i] && (nptr[i] >= '0' && nptr[i] <= '9'))
+	while (ft_isdigit(str[i]))
 	{
-		result = (result * 10) + (nptr[i] - '0');
+		num = (num * 10) + (str[i] - '0');
 		i++;
 	}
-	return (minus * result);
+	return (num * isneg);
 }

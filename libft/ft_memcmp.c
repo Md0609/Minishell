@@ -3,39 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 00:00:15 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/22 18:10:01 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:32:41 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:32:42 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*compare both memory & up to n bytes*/
-/*return 0 if are equal || rest s1 - s2 in first different byte*/
-/*n = 0 -> return 0  */
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	size_t			i;
-	int				found;
-	unsigned char	*s1_aux;
-	unsigned char	*s2_aux;
+	const char	*str1;
+	const char	*str2;
+	size_t		i;
 
-	i = 0;
-	found = 0;
 	if (n == 0)
 		return (0);
-	s1_aux = (unsigned char *)s1;
-	s2_aux = (unsigned char *)s2;
-	while ((i < n) && (s1_aux[i] == s2_aux[i]))
-	{
-		if (s1_aux[i] == s2_aux[i])
-			found = i;
+	str1 = (const char *)s1;
+	str2 = (const char *)s2;
+	i = 0;
+	while ((i < n - 1) && str1[i] == str2[i])
 		i++;
-	}
-	if (i == n)
-		return ((int)s1_aux[found] - (int)s2_aux[found]);
-	else
-		return ((int)s1_aux[i] - (int)s2_aux[i]);
+	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
 }

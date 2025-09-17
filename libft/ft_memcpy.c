@@ -3,31 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 13:32:31 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/26 18:19:07 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:32:33 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:32:34 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*copy n bytes from src memory to mem area dest. They must not overlap*/
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	size_t			i;
-	unsigned char	*aux_dest;
-	unsigned char	*aux_src;
+	char		*dp;
+	const char	*sp;
 
-	if ((n == 0) || (dest == src))
-		return (dest);
-	aux_dest = (unsigned char *)dest;
-	aux_src = (unsigned char *)src;
-	i = 0;
-	while (i < n)
+	if (!dst && !src)
+		return (0);
+	if (n == 0 || (dst == src))
+		return (dst);
+	dp = (char *)dst;
+	sp = (const char *)src;
+	while (n != 0)
 	{
-		*(aux_dest + i) = *(aux_src + i);
-		i++;
+		if (*dp != *sp)
+			*dp = *sp;
+		dp++;
+		sp++;
+		n--;
 	}
-	return (dest);
+	return (dst);
 }

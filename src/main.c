@@ -1,111 +1,54 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/11 20:27:54 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:28:05 by mdios-el         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
-#include <limits.h>
 
-static int	handle_input(t_input *input)
+static bool	start_check(t_data *data, int ac, char **av)
 {
-	char	*prompt;
-
-	prompt = get_prompt(input);
-	input->input = readline(prompt);
-	free(prompt);
-	if (g_signal_received == SIGQUIT)
-		clean_all(input, 131);
-	else if (g_signal_received == SIGINT)
-		input->last_exit_code = 130;
-	g_signal_received = 0;
-	if (!input->input)
-		return (0);
-	if (!input->input[0])
-	{
-		free(input->input);
-		return (1);
-	}
-	ft_manage_history(input->input, 0);
-	input->input_split = ft_split_quotes(input->input, ' ', input);
-	if (!input->input_split || !input->input_split[0])
-	{
-		free(input->input);
-		return (1);
-	}
-	return (2);
+	(void)data;
+	(void)av;
+	if (ac != 1)
+		return (usage_message(false));
+	return (true);
 }
 
-static void	retry_parse_command(t_input *input)
+void	minishell_start(t_data *data)
 {
-	free(input->filename);
-	free(input->input);
-	input->input = ft_strdup(input->parsed);
-	free(input->parsed);
-	ft_matrix_free(&input->input_split);
-	input->input_split = ft_split_quotes(input->input, ' ', input);
-	compose_command_args(input);
-	parsing(input);
-}
-
-static void	shell_loop(t_input *input)
-{
-	int	status;
+	int	parse_result;
 
 	while (1)
 	{
-		status = handle_input(input);
-		if (status == 0)
-			break ;
-		else if (status == 1)
-			continue ;
-		compose_command_args(input);
-		parsing(input);
-		if ((!input->command || !input->command[0]) && input->parsed)
-			retry_parse_command(input);
-		ft_manage_pipes(input);
-		free(input->input);
+		set_signals_interactive();
+		data->user_input = readline(PROMPT);
+		set_signals_noninteractive();
+		parse_result = parse_user_input(data);
+		if (parse_result == 1)
+			g_last_exit_code = execute(data);
+		else if (parse_result == 0)
+			g_last_exit_code = 0;
+		else
+			g_last_exit_code = 1;
+		free_data(data, false);
 	}
 }
 
-bool	init_shlvl(t_input *input)
+int	main(int ac, char **av, char **env)
 {
-	char	*shlvl_str;
-	int		shlvl_int;
+	t_data	data;
 
-	shlvl_str = get_env_value(input->envp, "SHLVL");
-	if (!shlvl_str)
-		return (1);
-	shlvl_int = ft_atoi(shlvl_str);
-	shlvl_str = NULL;
-	shlvl_int += 1;
-	shlvl_str = ft_itoa(shlvl_int);
-	if (!shlvl_str)
-		return (1);
-	update_env(input, "SHLVL", shlvl_str);
-	if (shlvl_str && shlvl_str[0])
-		free(shlvl_str);
-	shlvl_str = NULL;
+	ft_memset(&data, 0, sizeof(t_data));
+	if (!start_check(&data, ac, av) || !init_data(&data, env))
+		exit_shell(NULL, EXIT_FAILURE);
+	minishell_start(&data);
+	exit_shell(&data, g_last_exit_code);
 	return (0);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_input				input;
-	struct sigaction	sa;
-
-	(void)argc;
-	(void)argv;
-	input.envp = ft_matrix_dup(envp);
-	if (!input.envp)
-		clean_all(&input, 1);
-	if (init_shlvl(&input))
-		clean_all(&input, 1);
-	input.is_script = !isatty(STDIN_FILENO);
-	init_sigaction(&sa);
-	init_input_struct(&input);
-	shell_loop(&input);
-	clean_all(&input, 0);
-	if (input.is_script && input.last_exit_code != 0)
-		exit(input.last_exit_code);
-	else if (input.is_script && input.last_exit_code == 0)
-		exit(1);
-	else
-		exit(input.last_exit_code);
 }

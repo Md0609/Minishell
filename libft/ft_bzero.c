@@ -3,26 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 10:47:13 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/20 08:26:13 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:36:39 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:36:40 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*set to '\0' all n memory places starting by address pointed by s*/
 void	ft_bzero(void *s, size_t n)
 {
-	size_t			index;
-	unsigned char	*ptr;
+	unsigned char	*p;
 
-	index = 0;
-	ptr = (unsigned char *)s;
-	while (index < n)
+	p = (unsigned char *)s;
+	while (n != 0)
 	{
-		ptr[index] = '\0';
-		index++;
+		*p = '\0';
+		p++;
+		n--;
 	}
 }

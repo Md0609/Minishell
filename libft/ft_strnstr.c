@@ -3,52 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 10:05:22 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:57:12 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:29:43 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:29:45 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-static int	ft_findstr(const char *s1, const char *s2, size_t l)
+char	*ft_strnstr(const char *s1, const char *s2, size_t n)
 {
+	size_t	s2len;
 	size_t	i;
 	size_t	j;
-	size_t	pos;
-	size_t	k;
 
+	s2len = ft_strlen(s2);
+	if (s1 == s2 || s2len == 0)
+		return ((char *)s1);
 	i = 0;
-	j = 0;
-	k = 0;
-	pos = 0;
-	while ((s1[i]) && (i < l))
+	while (i < n && s1[i] != '\0')
 	{
-		k = i;
-		while ((s1[k] == s2[j]) && (s1[k]) && (k < l))
-		{
-			if (s2[j])
-				j++;
-			pos = ++k;
-		}
-		if (s2[j] == '\0')
-			return (pos - j);
 		j = 0;
+		while (s1[i + j] != '\0' && s2[j] != '\0'
+			&& (i + j) < n && s1[i + j] == s2[j])
+		{
+			j++;
+			if ((j == n && j == s2len) || j == s2len)
+				return ((char *)(s1 + i));
+		}
 		i++;
 	}
-	return (-1);
-}
-
-char	*ft_strnstr(const char *big, const char *little, size_t len)
-{
-	int		found_position;
-
-	if (little[0] == '\0')
-		return ((char *)big);
-	found_position = ft_findstr(big, little, len);
-	if (found_position == -1)
-		return (0);
-	else
-		return ((char *)&big[found_position]);
+	return (0);
 }

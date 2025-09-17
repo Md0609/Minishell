@@ -3,37 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 18:29:56 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:57:41 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:29:07 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:29:12 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*returns a substring from 's' starting from 'start' and max length of 'len'*/
-/*NULL if not malloc correctly*/
-/*this drive me nuts it has to be "" if start > strlen(s) and don't know why!*/
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	len_s;
-	size_t	len_dest;
-	char	*dest;
+	char	*res;
+	char	*src;
+	size_t	reslen;
 
 	if (!s)
 		return (NULL);
-	len_s = ft_strlen(s);
-	if (start >= len_s)
-		return (ft_calloc(1, sizeof(char)));
-	len_dest = len_s - start;
-	if (len_dest <= 0)
+	if (ft_strlen(s) < (size_t)start)
+		return (ft_strdup(""));
+	src = (char *)s + start;
+	if (ft_strlen(src) < len)
+		reslen = ft_strlen(src) + 1;
+	else
+		reslen = len + 1;
+	res = malloc(reslen * sizeof(char));
+	if (!res)
 		return (NULL);
-	if (len_dest > len)
-		len_dest = len;
-	dest = (char *)ft_calloc((len_dest + 1), sizeof(char));
-	if (!dest)
-		return (NULL);
-	ft_strlcpy(dest, &s[start], len_dest + 1);
-	return (dest);
+	ft_strlcpy(res, src, reslen);
+	return (res);
 }

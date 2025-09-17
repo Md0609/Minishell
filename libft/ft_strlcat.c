@@ -3,45 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jrollon- <jrollon-@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: mdios-el <mdios-el@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 08:33:05 by jrollon-          #+#    #+#             */
-/*   Updated: 2025/01/19 09:56:33 by jrollon-         ###   ########.fr       */
+/*   Created: 2025/07/11 20:30:24 by mdios-el          #+#    #+#             */
+/*   Updated: 2025/07/11 20:30:29 by mdios-el         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-/*if size src + size dest > size given only will copy the chars that fit and
-will set a \0 in last one. If size is less or equal to the size of dest, then
-will return the necesary space needed to proceed with that secure.
-*/
-static size_t	ft_size(const char *str)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
+	size_t	j;
+	size_t	d_size;
+	size_t	s_size;
 
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	size_dest;
-	size_t	size_src;
-
-	i = 0;
-	size_dest = ft_size(dst);
-	size_src = ft_size(src);
-	if (size <= size_dest)
-		return (size + size_src);
-	while (src[i] != '\0' && (size_dest + i < size - 1))
+	d_size = ft_strlen(dst);
+	s_size = ft_strlen(src);
+	if (dstsize <= d_size)
+		return (dstsize + s_size);
+	i = d_size;
+	j = 0;
+	while ((i + j) < (dstsize - 1) && src[j] != '\0')
 	{
-		dst[size_dest + i] = src[i];
-		i++;
+		dst[i + j] = src[j];
+		j++;
 	}
-	dst[size_dest + i] = '\0';
-	return (size_dest + size_src);
+	dst[i + j] = '\0';
+	return (d_size + s_size);
 }

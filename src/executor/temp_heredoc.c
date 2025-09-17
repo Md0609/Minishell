@@ -1,1 +1,0 @@
-﻿#define HEREDOC_BUFFER_SIZE 8192
